@@ -1,0 +1,51 @@
+version: "3.8"
+services:
+  next-container:
+    build:
+      context: './frontend'
+    ports:
+      - "3000:3000"
+    container_name: next-container
+    image: next-container:latest
+    environment:
+      - WATCHPACK_POLLING=true
+    networks:
+      - mern-stack-network
+    volumes:
+      - ./frontend:/app
+      - "/app/node_modules"
+    depends_on:
+      - express-container
+  express-container:
+    build:
+      context: "./backend"
+    ports:
+      - "5000:5000"
+    container_name: express-container
+    image: express-container:latest
+    environment:
+      - MONGO_URI=mongodb://root:secret@mongo:27017/users?authSource=admin
+    networks:
+      - mern-stack-network
+    volumes:
+      - ./backend:/app
+      - "/app/node_modules"
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    container_name: mongo-container
+    networks:
+      - mern-stack-network
+    volumes:
+      - mongoData:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+      - MONGO_INITDB_ROOT_DATABASE=users
+networks:
+  mern-stack-network:
+volumes:
+  mongoData:
