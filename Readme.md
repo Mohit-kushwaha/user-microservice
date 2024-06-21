@@ -31,6 +31,7 @@ Make sure you have the following installed on your local machine:
 │   └── ... rest of files
 ├── docker-compose.yml
 └── README.md
+ ```
 
 Docker Setup
 Docker Compose Configuration
